@@ -110,6 +110,7 @@ import Data.Monoid
 #endif
 import System.Environment
 import Data.Maybe
+import Data.Text.Encoding.Error
 
 -- | Compare the output file's contents against the golden file's contents
 -- after the given action has created the output file.
@@ -327,7 +328,7 @@ readFileStrict path = do
   return s
 
 unpackUtf8 :: LBS.ByteString -> String
-unpackUtf8 = LT.unpack . LT.decodeUtf8
+unpackUtf8 = LT.unpack . LT.decodeUtf8With lenientDecode
 
 runDiff
   :: [String] -- ^ the diff command
