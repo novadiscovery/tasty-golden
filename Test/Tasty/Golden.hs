@@ -98,6 +98,7 @@ import qualified Data.Text.Lazy.Encoding as LT
 import System.IO
 import System.IO.Temp
 import qualified System.Process.Typed as PT
+import System.Process (showCommandForUser)
 import System.Exit
 import System.FilePath
 import System.Directory
@@ -231,7 +232,7 @@ goldenVsStringDiff name cmdf ref act =
     diff_result :: Maybe String <- runDiff cmd sizeCutoff
 
     return $ flip fmap diff_result $ \diff ->
-      printf "Test output was different from '%s'. Output of %s:\n" ref (show cmd) <> diff
+      printf "Test output was different from '%s'. Output of %s:\n" ref (showCommandForUser "" cmd) <> diff
 
   upd = createDirectoriesAndWriteFile ref
 

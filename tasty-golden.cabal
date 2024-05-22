@@ -66,6 +66,7 @@ library
     containers,
     directory,
     async,
+    process,
     text
 
 Test-suite test
