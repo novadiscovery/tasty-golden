@@ -181,12 +181,21 @@ goldenVsFileDiff name cmdf ref new act =
     name
     (throwIfDoesNotExist ref)
     act
-    (\_ _ -> runDiff (cmdf ref new) sizeCutoff)
+    -- (\_ _ -> runDiff (cmdf ref new) sizeCutoff) replaced with...
+    (cmp sizeCutoff)
     upd
     del
   where
   upd _ = readFileStrict new >>= createDirectoriesAndWriteFile ref
   del = removeFile new
+  -- (\_ _ -> runDiff (cmdf ref new) sizeCutoff)
+  cmp sizeCutoff _ _ = do 
+    let cmd = cmdf ref new
+    diff_result :: Maybe String <- runDiff cmd sizeCutoff
+
+    return $ flip fmap diff_result $ \diff ->
+      printf "Test output was different from '%s'. Output of %s:\n" ref (showCommandForUser "" cmd) <> diff
+
 
 -- If the golden file doesn't exist, throw an isDoesNotExistError that
 -- runGolden will handle by creating the golden file before proceeding.
